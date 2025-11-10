@@ -3,7 +3,7 @@ interface IArvoreString {
 
     boolean remove(String value);
 
-    NodoBin find(String value);
+    NodoBinString find(String value);
 
     int altura();
 
@@ -11,7 +11,7 @@ interface IArvoreString {
 }
 
 public class ArvoreBinaria implements IArvoreString {
-    private NodoBin raiz = null;
+    private NodoBinString raiz = null;
     private String[] ordenacao = null;
 
     public ArvoreBinaria() {
@@ -35,9 +35,9 @@ public class ArvoreBinaria implements IArvoreString {
         raiz = subInsert(raiz, value.trim());
     }
 
-    private NodoBin subInsert(NodoBin p, String value) {
+    private NodoBinString subInsert(NodoBinString p, String value) {
         if (p == null)
-            return new NodoBin(value, null, null);
+            return new NodoBinString(value, null, null);
 
         int compareResult = compare(value, p.value);
         if (compareResult < 0)
@@ -49,11 +49,11 @@ public class ArvoreBinaria implements IArvoreString {
         return p;
     }
 
-    public NodoBin find(String value) {
+    public NodoBinString find(String value) {
         return subFind(raiz, value);
     }
 
-    private NodoBin subFind(NodoBin p, String value) {
+    private NodoBinString subFind(NodoBinString p, String value) {
         if (p == null)
             return null;
 
@@ -73,7 +73,7 @@ public class ArvoreBinaria implements IArvoreString {
         return true;
     }
 
-    private NodoBin subRemove(NodoBin p, String value) {
+    private NodoBinString subRemove(NodoBinString p, String value) {
         if (p == null)
             return p;
 
@@ -90,7 +90,7 @@ public class ArvoreBinaria implements IArvoreString {
             } else if (p.right == null) {
                 return p.left;
             } else {
-                NodoBin minNode = p.left;
+                NodoBinString minNode = p.left;
                 while (minNode.right != null) {
                     minNode = minNode.right;
                 }
@@ -105,7 +105,7 @@ public class ArvoreBinaria implements IArvoreString {
         return subSize(raiz);
     }
 
-    private int subSize(NodoBin node) {
+    private int subSize(NodoBinString node) {
         if (node == null)
             return 0;
         return 1 + subSize(node.left) + subSize(node.right);
@@ -115,7 +115,7 @@ public class ArvoreBinaria implements IArvoreString {
         return subAltura(raiz);
     }
 
-    private int subAltura(NodoBin p) {
+    private int subAltura(NodoBinString p) {
         if (p == null)
             return 0;
         if (p.left == null && p.right == null)
@@ -156,7 +156,7 @@ public class ArvoreBinaria implements IArvoreString {
         System.out.println(toStringCentral());
     }
 
-    private void subPrintCentralComProfundidade(NodoBin node, int nivel) {
+    private void subPrintCentralComProfundidade(NodoBinString node, int nivel) {
         if (node == null)
             return;
         subPrintCentralComProfundidade(node.right, nivel + 1);
@@ -170,7 +170,7 @@ public class ArvoreBinaria implements IArvoreString {
         return sb.toString();
     }
 
-    private void toStringCentral(NodoBin node, StringBuilder sb) {
+    private void toStringCentral(NodoBinString node, StringBuilder sb) {
         if (node == null)
             return;
         toStringCentral(node.left, sb);
@@ -184,7 +184,7 @@ public class ArvoreBinaria implements IArvoreString {
         return sb.toString();
     }
 
-    private void toStringPreFixado(NodoBin node, StringBuilder sb) {
+    private void toStringPreFixado(NodoBinString node, StringBuilder sb) {
         if (node == null)
             return;
         sb.append(node.value).append(" ");
@@ -192,7 +192,7 @@ public class ArvoreBinaria implements IArvoreString {
         toStringPreFixado(node.right, sb);
     }
 
-    // private void subPrintPorNivel(NodoBin node) {
+    // private void subPrintPorNivel(NodoBinString node) {
     //     if (node == null)
     //         return;
     //     System.out.print("\t".repeat(subSize(node.left)));
@@ -213,7 +213,7 @@ public class ArvoreBinaria implements IArvoreString {
     //     return sb.toString().trim();
     // }
 
-    // private void toStringHelper(NodoBin node, StringBuilder sb) {
+    // private void toStringHelper(NodoBinString node, StringBuilder sb) {
     //     if (node == null) {
     //         return;
     //     }

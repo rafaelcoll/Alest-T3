@@ -41,10 +41,11 @@ public class App {
 
         System.out.println("Fim do processamento do arquivo.");
         // arvore.print();
-        
+
         System.out.println("\n=== Resultados ===");
         System.out.println("Caso de teste: " + arquivo);
-        System.out.println("Tempo de processamento: " + String.format(Locale.forLanguageTag("pt-BR"), "%.6f", tempoExecucao) + " ms");
+        System.out.println("Tempo de processamento: "
+                + String.format(Locale.forLanguageTag("pt-BR"), "%.6f", tempoExecucao) + " ms");
         System.out.println("Altura: " + arvore.altura());
         System.out.println("Quantidade de nodos: " + arvore.size());
         System.out.println("Validação caminhamento pré-fixado: " + Objects.equals(arvore.toStringPreFixado(), entrada));
@@ -77,8 +78,8 @@ public class App {
     }
 
     private static void processaEntrada(String input) {
+        // Ignora entradas vazias
         if (input == null || input.trim().isEmpty()) {
-            // System.out.println("Entrada vazia. Por favor, insira um valor válido.");
             return;
         }
 

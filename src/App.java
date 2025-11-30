@@ -1,24 +1,80 @@
+import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class App {
-    static ArvoreBinaria arvore = new ArvoreBinaria();
-
     public static void main(String[] args) throws Exception {
         System.out.println("== Salvando as árvores ==");
+        interfacePrincipal();
+    }
 
-        if (args.length == 1) {
-            processaArquivo(args[0]);
-            return;
+    private static void interfacePrincipal() {
+        exibeHelp();
+        
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        do {
+            File[] arquivos = listaArquivosTxt();
+            int indices = arquivos.length;
+            System.out.print("Digite a opção desejada: ");
+            input = scanner.nextLine().trim();
+            // System.out.println("Você digitou: " + input); // Debug
+
+            if (input.equalsIgnoreCase("h")) {
+                exibeHelp();
+                continue;
+            }
+
+            Integer option;
+            try {
+                option = Integer.parseInt(input);
+                if (option > 0 && option <= indices) {
+                    input = arquivos[option-1].getName();
+                    System.out.println("Arquivo selecionado: " + input);
+                } else {
+                    System.out.println("Opção inválida.");
+                    continue;
+                }
+            } catch (Exception e) {
+                System.out.println("Comando inválido.");
+                continue;
+            }
+            
+            processaArquivo(input);
+        } while (!input.equalsIgnoreCase("q"));
+
+        scanner.close();
+    }
+
+    private static void exibeHelp() {
+        System.out.println("Comandos disponíveis:");
+        System.out.println("  <número> - Processa o arquivo correspondente ao número listado");
+        System.out.println("  q -        Encerra o programa");
+        System.out.println("  h -        Exibe esta mensagem de ajuda");
+    }
+
+    private static File[] listaArquivosTxt() {
+        System.out.println("\nLista de arquivos:");
+        File dir = new File(".");
+        File[] arquivos = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".txt"));
+        if (arquivos != null && arquivos.length > 0) {
+            Arrays.sort(arquivos);
+            for (int i = 1; i <= arquivos.length; i++) {
+                System.out.println(i + ". " + arquivos[i-1].getName());
+            }
+        } else {
+            System.out.println("Nenhum arquivo .txt encontrado.");
         }
 
-        interfacePrompt();
+        return arquivos;
     }
 
     private static void processaArquivo(String arquivo) {
         System.out.println("Processando arquivo: " + arquivo);
+        ArvoreBinaria arvore;
         String entrada;
         String ordenacao;
 
@@ -42,120 +98,16 @@ public class App {
         System.out.println("Fim do processamento do arquivo.");
         // arvore.print();
 
-        System.out.println("\n=== Resultados ===");
-        System.out.println("Caso de teste: " + arquivo);
+        System.out.println("\n=== Resultado ===");
+        System.out.println("Arquivo: " + arquivo);
         System.out.println("Tempo de processamento: "
                 + String.format(Locale.forLanguageTag("pt-BR"), "%.6f", tempoExecucao) + " ms");
-        System.out.println("Altura: " + arvore.altura());
+        System.out.println("Altura da árvore: " + arvore.altura());
         System.out.println("Quantidade de nodos: " + arvore.size());
         System.out.println("Validação caminhamento pré-fixado: " + Objects.equals(arvore.toStringPreFixado(), entrada));
         System.out.println("Validação caminhamento central: " + Objects.equals(arvore.toStringCentral(), ordenacao));
+        System.out.println("==================");
 
         return;
-    }
-
-    private static void interfacePrompt() {
-        exibeHelp();
-
-        Scanner scanner = new Scanner(System.in);
-        String input;
-        do {
-            System.out.print("> ");
-            input = scanner.nextLine().trim();
-            // System.out.println("Você digitou: " + input);
-
-            if (input.equalsIgnoreCase("help") || input.equalsIgnoreCase("h")) {
-                exibeHelp();
-                continue;
-            }
-
-            processaEntrada(input);
-            // arvore.print();
-        } while (!input.equalsIgnoreCase("quit") && !input.equalsIgnoreCase("q"));
-
-        exibeEstadoFinal();
-        scanner.close();
-    }
-
-    private static void processaEntrada(String input) {
-        // Ignora entradas vazias
-        if (input == null || input.trim().isEmpty()) {
-            return;
-        }
-
-        String[] comandos = input.toLowerCase().split(" ");
-
-        switch (comandos[0]) {
-            case "find":
-                String valorParaBuscar = comandos.length == 2 ? comandos[1].trim() : "";
-                if (valorParaBuscar.isEmpty()) {
-                    System.out.println("Comando 'find' requer um valor para buscar.");
-                    return;
-                }
-                if (arvore.find(valorParaBuscar) == null) {
-                    System.out.println("Valor '" + valorParaBuscar + "' não encontrado na árvore.");
-                } else {
-                    System.out.println("Valor '" + valorParaBuscar + "' encontrado na árvore.");
-                }
-                break;
-            case "del":
-                String valorParaDeletar = comandos.length == 2 ? comandos[1].trim() : "";
-                if (valorParaDeletar.isEmpty()) {
-                    System.out.println("Comando 'del' requer um valor para deletar.");
-                    return;
-                }
-                if (arvore.remove(valorParaDeletar)) {
-                    System.out.println("Valor '" + valorParaDeletar + "' removido da árvore.");
-                } else {
-                    System.out.println("Valor '" + valorParaDeletar + "' não encontrado para remoção.");
-                    return;
-                }
-                break;
-            case "alt":
-                System.out.println("Altura da árvore: " + arvore.altura());
-                break;
-            case "print":
-                break;
-            case "size":
-            case "cont":
-                System.out.println("Contagem de nós na árvore: " + arvore.size());
-                break;
-            case "ins":
-                String valorParaInserir = comandos.length == 2 ? comandos[1].trim() : "";
-                if (valorParaInserir.isEmpty()) {
-                    System.out.println("Comando 'ins' requer um valor para inserir.");
-                    return;
-                } else {
-                    // System.out.println("Inserindo o valor: " + valorParaInserir);
-                    arvore.insert(valorParaInserir);
-                }
-                break;
-            default:
-                String[] valoresParaInserir = comandos;
-                for (String valor : valoresParaInserir) {
-                    if (valor.trim().isEmpty())
-                        continue;
-                    System.out.println("Inserindo o valor: " + valor);
-                    arvore.insert(valor);
-                }
-                break;
-        }
-
-        arvore.print();
-    }
-
-    private static void exibeHelp() {
-        System.out.println("Digite um valor de entrada ou um dos comandos abaixo.");
-        System.out.println("'ins', 'find', 'del' <número> - insere, busca ou deleta o número na árvore");
-        System.out.println("'alt' exibe a altura da árvore");
-        System.out.println("'print' exibe a árvore");
-        System.out.println("Digite 'q' ou 'quit' para sair do programa.");
-        System.out.println("Digite 'h' ou 'help' para exibir essa mensagem novamente.");
-    }
-
-    private static void exibeEstadoFinal() {
-        System.out.println("Estado final da árvore: " + arvore.toString());
-        System.out.println("Altura final da árvore: " + arvore.altura());
-        System.out.println("Encerrando a árvore.");
     }
 }

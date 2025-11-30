@@ -1,21 +1,14 @@
 interface IArvoreString {
-    void insert(String value);
-
+    void insert(String[] lista);
     boolean remove(String value);
-
     NodoBinString find(String value);
-
     int altura();
-
     int size();
 }
 
 public class ArvoreBinaria implements IArvoreString {
     private NodoBinString raiz = null;
     private String[] ordenacao = null;
-
-    public ArvoreBinaria() {
-    }
 
     public ArvoreBinaria(String[] ordenacao) {
         this.ordenacao = ordenacao;
@@ -29,10 +22,6 @@ public class ArvoreBinaria implements IArvoreString {
         for (String valor : lista) {
             raiz = subInsert(raiz, valor.trim());
         }
-    }
-
-    public void insert(String value) {
-        raiz = subInsert(raiz, value.trim());
     }
 
     private NodoBinString subInsert(NodoBinString p, String value) {
@@ -125,11 +114,7 @@ public class ArvoreBinaria implements IArvoreString {
     }
 
     private int compare(String string1, String string2) {
-        // Comparando string1 com string2
-
-        // Ordenação não definida. Usando comparação padrão.
-        if (ordenacao == null)
-            return string1.compareTo(string2);
+        // Compara string1 com string2
 
         // Strings são iguais
         if (string1.equals(string2))
@@ -157,8 +142,7 @@ public class ArvoreBinaria implements IArvoreString {
     }
 
     private void subPrintCentralComProfundidade(NodoBinString node, int nivel) {
-        if (node == null)
-            return;
+        if (node == null) return;
         subPrintCentralComProfundidade(node.right, nivel + 1);
         System.out.println("   ".repeat(nivel) + node.value);
         subPrintCentralComProfundidade(node.left, nivel + 1);
@@ -204,21 +188,5 @@ public class ArvoreBinaria implements IArvoreString {
 
     //     subPrintPorNivel(node.left);
     //     subPrintPorNivel(node.right);
-    // }
-
-    // @Override
-    // public String toString() {
-    //     StringBuilder sb = new StringBuilder();
-    //     toStringHelper(raiz, sb);
-    //     return sb.toString().trim();
-    // }
-
-    // private void toStringHelper(NodoBinString node, StringBuilder sb) {
-    //     if (node == null) {
-    //         return;
-    //     }
-    //     sb.append(node.value).append(" ");
-    //     toStringHelper(node.left, sb);
-    //     toStringHelper(node.right, sb);
     // }
 }
